@@ -2,3 +2,4 @@ instances/*
 *.swp
 id_rsa.pub
 .vagrant/*
+directory.conf.yml

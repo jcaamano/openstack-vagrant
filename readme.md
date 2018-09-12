@@ -65,6 +65,9 @@ The hypervisor object has two fields:
 | name      | The server name (will be looked up via DNS)  |
 | username  | The user with which to log in                |
 
+Sample configuration `directory.conf.yml.sample` can be used as a startingi
+point.
+
 ## Customisation
 
 The virtual machine is provisioned using the `devstack.yml` ansible playbook.
