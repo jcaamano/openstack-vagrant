@@ -44,3 +44,4 @@
     copy: src="~/.vimrc" dest=/home/stack/.vimrc
     become: yes
     become_user: stack
+    ignore_errors: yes
