@@ -20,8 +20,14 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder 'common', '/vagrant_common', type: "rsync"
 
+
   directory['machines'].each do |machine|
     config.vm.define machine['name'] do |config|
+
+      # There seems to be compatibility problems between gnu & bsd netcat.
+      # Workaround for SUSE hosts (bsd netcat).
+      config.ssh.proxy_command = "ssh #{machine['hypervisor']['name']} -l #{machine['hypervisor']['username']} nc -N %h %p"
+
       config.vm.hostname = machine['name']
       config.vm.box = machine['box']
       config.vm.provider :libvirt do |libvirt|
