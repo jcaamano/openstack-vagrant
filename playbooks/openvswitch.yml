@@ -1,0 +1,49 @@
+---
+- hosts: all
+  tasks:
+  - name: Check presence of custom Open vSwitch project
+    stat:
+      path: /opt/stack/openvswitch
+    register: openvswitch
+  - name: Build and install Open vSwitch on Debian
+    block:
+      - name: Install build tools on debian
+        apt: name={{packages}}
+        vars:
+          packages:
+            - devscripts
+            - equivs
+            - autoconf
+            - module-assistant
+      - name: Install kernel headers on Debian 
+        command: module-assistant -t prepare
+      - name: Parse out Open vSwitch version from "configure.ac"
+        command: autoconf -t AC_INIT:'$2'
+        args:
+          chdir: "{{openvswitch.stat.path}}"
+        register: version
+      - set_fact: version={{version.stdout}}
+      - name: Package Open vSwitch dependencies on Debian
+        command: mk-build-deps -B debian/control
+        args:
+          chdir: "{{openvswitch.stat.path}}"
+      - name: Install Open vSwitch dependencies on Debian
+        apt: deb="{{openvswitch.stat.path}}/openvswitch-build-deps-depends_{{version}}-1_all.deb"
+      - name: Build openvswitch on debian
+        shell: DEB_BUILD_OPTIONS='nocheck' fakeroot debian/rules binary
+        args:
+          chdir: "{{openvswitch.stat.path}}"
+      - name: Install Open vSwitch on Debian
+        apt: deb={{openvswitch.stat.path}}/../{{item}}
+        with_items:
+          - libopenvswitch_{{version}}-1_amd64.deb
+          - openvswitch-common_{{version}}-1_amd64.deb
+          - openvswitch-switch_{{version}}-1_amd64.deb
+          - openvswitch-datapath-source_{{version}}-1_all.deb
+      - name: Build & install Open vSwitch kernel module on Debian
+        command: module-assistant -t auto-install openvswitch-datapath
+    become: yes
+    become_user: root
+    when:
+      - openvswitch.stat.exists
+      - ansible_os_family == "Debian"

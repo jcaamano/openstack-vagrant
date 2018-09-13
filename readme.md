@@ -58,6 +58,9 @@ The projects objects have the following fields:
 | repo     | The repo from which to git clone (Optional)                       |
 | version  | The git version to take (branch, tag, or commit hash) (Optional)  |
 
+A `openvswitch` named project pointing to an openvswitch repository can be
+added to build and install from it.
+
 The hypervisor object has two fields:
 
 | Field     | Description                                  |
