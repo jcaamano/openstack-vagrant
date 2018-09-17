@@ -20,8 +20,8 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder 'common', '/vagrant_common', type: "rsync"
 
-
-  directory['machines'].each do |machine|
+  ansible_host_vars = {}
+  directory['machines'].each_with_index do |machine, index|
     config.vm.define machine['name'] do |config|
 
       # There seems to be compatibility problems between gnu & bsd netcat.
@@ -38,15 +38,22 @@ Vagrant.configure(2) do |config|
         libvirt.cpus = machine['vcpus']
         libvirt.cpu_mode = 'host-passthrough'
       end
-      config.vm.provision "ansible" do |ansible|
-        ansible.playbook = "devstack.yml"
-        ansible.raw_arguments = "-vvv"
-        ansible.host_vars = {machine['name'] => {"ansible_ssh_common_args": escape("-o ProxyCommand=\"ssh '#{machine['hypervisor']['name']}' -l '#{machine['hypervisor']['username']}' -i '/#{ENV['HOME']}/.ssh/id_rsa' nc %h %p\"")}}
-        ansible.extra_vars = {
-          local_conf_file: machine['local_conf_file'],
-          projects: machine['projects'],
-	  devstack_version: machine['devstack_version']
-        }
+
+      projects = machine['projects']
+      ansible_host_vars[machine['name']] = {
+        ansible_ssh_common_args: escape("-o ProxyCommand=\"ssh '#{machine['hypervisor']['name']}' -l '#{machine['hypervisor']['username']}' -i '/#{ENV['HOME']}/.ssh/id_rsa' nc %h %p\""),
+        local_conf_file: machine['local_conf_file'],
+        projects: "'#{projects.to_json}'",
+        devstack_version: machine['devstack_version']
+      }
+
+      if index == directory['machines'].size - 1
+        config.vm.provision "ansible" do |ansible|
+          ansible.playbook = "devstack.yml"
+          #ansible.raw_arguments = "-vvv"
+          ansible.limit = "all"
+          ansible.host_vars = ansible_host_vars
+        end
       end
     end
   end
