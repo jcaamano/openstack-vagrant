@@ -1,0 +1,45 @@
+---
+- hosts: all
+  tasks:
+    - name: Find external opendaylight
+      find:
+        paths: /vagrant_data
+        file_type: directory
+        patterns: 'karaf-*' 
+      register: files
+    - name: Setup opendayligt directory
+      file:
+        path: /opt/stack/opendaylight
+        state: directory
+      become: yes
+      become_user: stack
+      when:
+        - (files | length > 0)
+    - name: Link opendaylight
+      file:
+        src: "{{ item }}"
+        dest: "/opt/stack/opendaylight/{{ item | basename }}"
+        state: link
+      with_items: "{{ files.files | map(attribute='path') | list }}"
+      become: yes
+      become_user: stack
+      when:
+        - (files | length > 0)
+    - name: Give write permissions on opendaylight
+      file:
+        path: /vagrant_data
+        state: directory
+        mode: "a+w"
+        recurse: yes
+      become: yes
+      become_user: root
+      when:
+        - (files | length > 0)
+    - name: Install java (Debian)
+      package:
+        name: openjdk-8-jre-headless
+      when: ansible_os_family == "Debian"
+      become: yes
+      become_user: root
+      when:
+        - (files | length > 0)
