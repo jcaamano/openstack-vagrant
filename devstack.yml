@@ -5,7 +5,6 @@
 - import_playbook: playbooks/acl.yml
 - import_playbook: playbooks/git.yml
 - import_playbook: playbooks/python-devel.yml
-- import_playbook: playbooks/tmux.yml
 - import_playbook: playbooks/stack-user.yml
 - import_playbook: playbooks/projects.yml
 - import_playbook: playbooks/openvswitch.yml
