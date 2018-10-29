@@ -29,7 +29,19 @@ Vagrant.configure(2) do |config|
       type: "dhcp"
 
   ansible_host_vars = {}
-  directory['machines'].each_with_index do |machine, index|
+  ansible_hosts = []
+  ansible_config = nil
+  directory['machines'].each do |machine|
+    if (ARGV.index 'up' or ARGV.index 'provision') and ARGV.index machine['name']
+      ansible_hosts.push(machine['name'])
+      ansible_config = machine['name']
+    end
+    if ansible_hosts.empty?
+      ansible_config = machine['name']
+    end
+  end
+
+  directory['machines'].each do |machine|
     config.vm.define machine['name'] do |config|
 
       # There seems to be compatibility problems between gnu & bsd netcat.
@@ -55,14 +67,15 @@ Vagrant.configure(2) do |config|
         devstack_version: machine['devstack_version']
       }
 
-      if index == directory['machines'].size - 1
+      if ansible_config == machine['name']
         config.vm.provision "ansible" do |ansible|
           ansible.playbook = "devstack.yml"
           #ansible.raw_arguments = "-vvv"
-          ansible.limit = "all"
           ansible.host_vars = ansible_host_vars
+          ansible.limit = ansible_hosts.empty? ? 'all' : ansible_hosts
         end
       end
     end
   end
+
 end
