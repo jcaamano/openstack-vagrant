@@ -1,0 +1,19 @@
+---
+- hosts: all
+  tasks:
+  - name: Check presence of extra openstack scripts
+    stat:
+      path: /opt/stack/openstack-scripts
+    register: openstack_scripts
+  - name: Setup external interface
+    shell: /opt/stack/openstack-scripts/external_setup.sh
+    become: yes
+    become_user: stack
+    when:
+      - openstack_scripts.stat.exists
+  - name: Install sshpass
+    package: name=sshpass state=latest
+    become: yes
+    become_user: root
+    when:
+      - openstack_scripts.stat.exists

@@ -20,6 +20,14 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder 'common', '/vagrant_common', type: "rsync"
 
+  # Setup a private network as public, with default devstack address
+  config.vm.network "private_network",
+      libvirt__host_ip: "192.168.42.129",
+      libvirt__network_address: "192.168.42.0",
+      libvirt__dhcp_stop: "192.168.42.10",
+      libvirt__dhcp_enabled: true,
+      type: "dhcp"
+
   ansible_host_vars = {}
   directory['machines'].each_with_index do |machine, index|
     config.vm.define machine['name'] do |config|

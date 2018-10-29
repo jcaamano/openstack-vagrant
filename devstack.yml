@@ -11,3 +11,4 @@
 - import_playbook: playbooks/openvswitch.yml
 - import_playbook: playbooks/reboot.yml
 - import_playbook: playbooks/devstack.yml
+- import_playbook: playbooks/openstack-scripts-tasks.yml
