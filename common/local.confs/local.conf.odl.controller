@@ -1,0 +1,62 @@
+[[local|localrc]]
+
+enable_plugin networking-odl https://github.com/jcaamano/networking-odl.git stable/queens_fixes
+enable_plugin networking-sfc https://github.com/jcaamano/networking-sfc.git stable/queens_fixes
+
+ODL_RELEASE=latest-snapshot
+ODL_INSTALL=False
+ODL_OVS_MANAGERS={{ hostvars['controller']['ansible_host'] }}
+ODL_MODE=allinone
+ODL_PROVIDER_MAPPINGS=${ODL_PROVIDER_MAPPINGS:-public:br-ex}
+ODL_NETVIRT_KARAF_FEATURE=odl-netvirt-openstack,odl-netvirt-sfc
+ODL_L3=True
+
+Q_USE_PROVIDERNET_FOR_PUBLIC=True
+PUBLIC_INTERFACE=eth1
+
+
+
+# Keystone - nothing works without keystone
+ENABLED_SERVICES=key
+# Nova - services to support libvirt based openstack clouds
+ENABLED_SERVICES+=,n-api,n-cpu,n-cond,n-sch,n-novnc,n-cauth,n-api-meta
+# Placement service needed for Nova
+ENABLED_SERVICES+=,placement-api,placement-client
+# Glance services needed for Nova
+ENABLED_SERVICES+=,g-api,g-reg
+# Cinder
+#ENABLED_SERVICES+=,c-sch,c-api,c-vol
+# Neutron
+#ENABLED_SERVICES+=,q-svc,q-dhcp,q-meta,q-agt,q-l3
+ENABLED_SERVICES+=,q-svc,q-dhcp,q-meta,q-agt
+#ENABLED_SERVICES+=,neutron,neutron-api,neutron-dhcp,neutron-metadata-agent,neutron-agent
+# Dashboard
+#ENABLED_SERVICES+=,horizon
+# Additional services
+#ENABLED_SERVICES+=,rabbit,tempest,mysql,etcd3,dstat
+ENABLED_SERVICES+=,rabbit,mysql,etcd3,dstat
+
+HOST_IP={{ hostvars['controller']['ansible_host'] }}
+FLAT_INTERFACE=eth0
+FIXED_RANGE=10.4.128.0/20
+FIXED_NETWORK_SIZE=4096
+FLOATING_RANGE=192.168.42.128/25
+MULTI_HOST=1
+LOGFILE=/opt/stack/logs/stack.sh.log
+ADMIN_PASSWORD=labstack
+DATABASE_PASSWORD=supersecret
+RABBIT_PASSWORD=supersecret
+SERVICE_PASSWORD=supersecret
+#FORCE=yes
+IP_VERSION=4
+
+SKIP_OVS_INSTALL=True
+#ODL_INSTALL=False
+
+# enable the networking-sfc OpenDaylight driver pair
+[[post-config|$NEUTRON_CONF]]
+[sfc]
+drivers = odl_v2
+[flowclassifier]
+drivers = odl_v2
+
