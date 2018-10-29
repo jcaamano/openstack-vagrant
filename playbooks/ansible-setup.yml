@@ -2,26 +2,26 @@
 - hosts: all
   gather_facts: no
   tasks:
-  - name: Install dependencies if redhat
+  - name: Install dependencies (RedHat)
     raw: dnf install -y python python-dnf
     become: yes
     become_user: root
     ignore_errors: yes
-  - name: Install dependencies if debian
+  - name: Install dependencies (Debian)
     raw: apt update && apt install -y python python-apt
     become: yes
     become_user: root
     ignore_errors: yes
   - name: setup
     setup:
-  - name: Install python-selinux
+  - name: Install python-selinux (RedHat)
     package:
       name: libselinux-python
       state: latest
     when: ansible_os_family == "RedHat"
     become: yes
     become_user: root
-  - name: Install python-selinux
+  - name: Install python-selinux (Debian)
     package:
       name: python-selinux
       state: latest

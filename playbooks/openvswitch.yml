@@ -5,9 +5,9 @@
     stat:
       path: /opt/stack/openvswitch
     register: openvswitch
-  - name: Build and install Open vSwitch on Debian
+  - name: Build and install Open vSwitch (Debian)
     block:
-      - name: Install build tools on debian
+      - name: Install build tools (Debian)
         apt: name={{packages}}
         vars:
           packages:
@@ -15,7 +15,7 @@
             - equivs
             - autoconf
             - module-assistant
-      - name: Install kernel headers on Debian 
+      - name: Install kernel headers (Debian)
         command: module-assistant -t prepare
       - name: Parse out Open vSwitch version from "configure.ac"
         command: autoconf -t AC_INIT:'$2'
@@ -23,25 +23,31 @@
           chdir: "{{openvswitch.stat.path}}"
         register: version
       - set_fact: version={{version.stdout}}
-      - name: Package Open vSwitch dependencies on Debian
+      - name: Package Open vSwitch dependencies (Debian)
         command: mk-build-deps -B debian/control
         args:
           chdir: "{{openvswitch.stat.path}}"
-      - name: Install Open vSwitch dependencies on Debian
+      - name: Install Open vSwitch dependencies (Debian)
         apt: deb="{{openvswitch.stat.path}}/openvswitch-build-deps-depends_{{version}}-1_all.deb"
-      - name: Build openvswitch on debian
+      - name: Build openvswitch (Debian)
         shell: DEB_BUILD_OPTIONS='nocheck' fakeroot debian/rules binary
         args:
           chdir: "{{openvswitch.stat.path}}"
-      - name: Install Open vSwitch on Debian
+      - name: Install Open vSwitch (Debian)
         apt: deb={{openvswitch.stat.path}}/../{{item}}
         with_items:
           - libopenvswitch_{{version}}-1_amd64.deb
           - openvswitch-common_{{version}}-1_amd64.deb
           - openvswitch-switch_{{version}}-1_amd64.deb
           - openvswitch-datapath-source_{{version}}-1_all.deb
-      - name: Build & install Open vSwitch kernel module on Debian
+      - name: Build & install Open vSwitch kernel module (Debian)
         command: module-assistant -t auto-install openvswitch-datapath
+      - name: Start Open vSwitch
+        systemd:
+          state: restarted
+          name: openvswitch-switch
+      - name: Reload openvswitch kernel module
+        shell: /usr/share/openvswitch/scripts/ovs-ctl force-reload-kmod
     become: yes
     become_user: root
     when:
