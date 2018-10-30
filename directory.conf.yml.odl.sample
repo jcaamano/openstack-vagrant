@@ -1,0 +1,30 @@
+machines:
+  - name: controller
+    hypervisor:
+      name: localhost
+      username: jcaamano
+    memory: 8192
+    vcpus: 1
+    box: "generic/ubuntu1710"
+    local_conf_file: ../common/local.confs/local.conf.odl.controller
+    devstack_version: stable/queens
+    projects:
+    - name: openvswitch
+      repo: https://github.com/openvswitch/ovs.git
+      version: v2.9.2
+    - name: openstack-scripts
+      repo: https://github.com/jcaamano/openstack-scripts.git
+
+  - name: compute
+    hypervisor:
+      name: localhost
+      username: jcaamano
+    memory: 8192
+    vcpus: 1
+    box: "generic/ubuntu1710"
+    local_conf_file: ../common/local.confs/local.conf.odl.compute
+    devstack_version: stable/queens
+    projects:
+    - name: openvswitch
+      repo: https://github.com/openvswitch/ovs.git
+      version: v2.9.2
