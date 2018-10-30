@@ -11,4 +11,4 @@
 - import_playbook: playbooks/reboot.yml
 - import_playbook: playbooks/opendaylight.yml
 - import_playbook: playbooks/devstack.yml
-- import_playbook: playbooks/openstack-scripts-tasks.yml
+- import_playbook: playbooks/openstack-scripts.yml
