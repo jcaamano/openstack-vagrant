@@ -1,0 +1,35 @@
+[[local|localrc]]
+
+enable_plugin networking-sfc https://github.com/jcaamano/networking-sfc.git stable/queens_fixes
+
+NOVA_READY_TIMEOUT=600
+
+Q_USE_PROVIDERNET_FOR_PUBLIC=True
+Q_ASSIGN_GATEWAY_TO_PUBLIC_BRIDGE=False
+PUBLIC_INTERFACE=eth1
+
+#HOST_IP=192.168.42.12 # change this per compute node
+HOST_IP={{ hostvars['compute']['ansible_host'] }}
+FLAT_INTERFACE=eth0
+FIXED_RANGE=10.4.128.0/20
+FIXED_NETWORK_SIZE=4096
+FLOATING_RANGE=192.168.42.128/25
+MULTI_HOST=1
+LOGFILE=/opt/stack/logs/stack.sh.log
+ADMIN_PASSWORD=labstack
+DATABASE_PASSWORD=supersecret
+RABBIT_PASSWORD=supersecret
+SERVICE_PASSWORD=supersecret
+DATABASE_TYPE=mysql
+SERVICE_HOST={{ hostvars['controller']['ansible_host'] }}
+MYSQL_HOST=$SERVICE_HOST
+RABBIT_HOST=$SERVICE_HOST
+GLANCE_HOSTPORT=$SERVICE_HOST:9292
+ENABLED_SERVICES=n-cpu,n-api-meta,placement-client,q-agt
+NOVA_VNC_ENABLED=True
+NOVNCPROXY_URL="http://$SERVICE_HOST:6080/vnc_auto.html"
+#VNCSERVER_LISTEN=$HOST_IP
+#VNCSERVER_PROXYCLIENT_ADDRESS=$VNCSERVER_LISTEN
+#
+SKIP_OVS_INSTALL=True
+
