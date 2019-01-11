@@ -75,3 +75,20 @@ point.
 
 The virtual machine is provisioned using the `devstack.yml` ansible playbook.
 The playbooks used are available in the playbooks folder.
+
+
+## Install Vagrant in opensuse and vagrant-libvirt
+
+These steps describe how to install Vagrant for opensuse Leap 15.0
+
+1 - Add the vagrant repo:
+zypper addrepo https://download.opensuse.org/repositories/home:/pavlix:/Development/openSUSE_Leap_15.0/home:pavlix:Development.repo
+
+2 - Install vagrant:
+sudo zypper in vagrant
+
+3 - Install libvirt-devel, ruby-devel and gcc:
+sudo zypper -n in libvirt-devel ruby-devel gcc
+
+4 - Install the vagrant-libvirt plugin:
+vagrant plugin install vagrant-libvirt
