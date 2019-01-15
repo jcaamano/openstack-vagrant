@@ -14,7 +14,7 @@ and then run devstack.
 3. (Optional) Install an SSH public key in common/keys/id_rsa.pub
 4. Create a local.conf file (Or use some of the examples in common/local.confs)
 5. Add (or update) a machine in directory.conf.yml (See configuration below)
-6. Run: `vagrant up <machine name>`
+6. Run: `vagrant up <machine name>` or `vagrant up` to start both controller and compute
 
 Once the VM is set up, it can be accessed using `vagrant ssh -p --
 -l stack`.  Other SSH options may follow if desired. devstack will be
