@@ -23,10 +23,12 @@
     copy: src="~/.bashrc" dest=/home/stack/.bashrc
     become: yes
     become_user: stack
+    ignore_errors: yes
   - name: Install .gitconfig
     copy: src="~/.gitconfig" dest=/home/stack/.gitconfig
     become: yes
     become_user: stack
+    ignore_errors: yes
   - name: Test if custom .tmux.conf exist
     stat: path="~/.tmux.conf"
     register: tmux_conf_stat
