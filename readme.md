@@ -92,3 +92,13 @@ sudo zypper -n in libvirt-devel ruby-devel gcc
 
 4 - Install the vagrant-libvirt plugin:
 vagrant plugin install vagrant-libvirt
+<<<<<<< HEAD
+
+5 - Add the user to the libvirt group
+sudo usermod -a -G libvirt user_name
+
+6 - Start libirt daemon
+systemctl enable libvirtd
+systemctl start libvirtd
+=======
+>>>>>>> 0d1207a096d597e74c8aa1d1580f38ede0e0d577
