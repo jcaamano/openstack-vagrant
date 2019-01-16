@@ -103,3 +103,9 @@ systemctl start libvirtd
 
 7 - Install ansible
 sudo zypper install ansible
+
+
+## Start using openstack
+
+vagrant ssh controller
+source /home/stack/devstack/openrc
