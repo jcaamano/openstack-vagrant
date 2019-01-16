@@ -108,4 +108,4 @@ sudo zypper install ansible
 ## Start using openstack
 
 vagrant ssh controller
-source /home/stack/devstack/openrc
+source /home/stack/devstack/openrc admin admin
