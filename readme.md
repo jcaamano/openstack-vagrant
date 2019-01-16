@@ -107,5 +107,11 @@ sudo zypper install ansible
 
 ## Start using openstack
 
+Once the compute is up, remember to discover it by executing in the controller:
+
 vagrant ssh controller
+./home/stack/devstack/tools/discover_hosts.sh
+
+Then, to start using openstack:
+
 source /home/stack/devstack/openrc admin admin
