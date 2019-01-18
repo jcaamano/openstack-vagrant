@@ -12,6 +12,11 @@
     become: yes
     become_user: root
     ignore_errors: yes
+  - name: Install dependencies (opensuse)
+    raw: zypper -n install python
+    become: yes
+    become_user: root
+    ignore_errors: yes
   - name: setup
     setup:
   - name: Install python-selinux (RedHat)

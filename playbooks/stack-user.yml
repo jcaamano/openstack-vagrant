@@ -9,6 +9,12 @@
       shell: "/bin/bash"
     become: yes
     become_user: root
+  - name: Ensure group "stack" exists
+    group:
+      name: stack
+      state: present
+    become: yes
+    become_user: root
   - name: Add Stack to Sudoers
     lineinfile: dest=/etc/sudoers.d/stack line="stack ALL=(ALL) NOPASSWD:ALL" state=present create=yes
     become: yes
