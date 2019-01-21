@@ -1,0 +1,32 @@
+machines:
+  - name: controller
+    hypervisor:
+      name: localhost
+      username: jcaamano
+    memory: 8192
+    vcpus: 1
+    box: "opensuse/openSUSE-42.3-x86_64"
+    local_conf_file: ../common/local.confs/local.conf.sfc.controller
+    devstack_version: stable/rocky
+    projects:
+    - name: openvswitch
+      repo: https://github.com/jcaamano/ovs.git
+      version: fix_push_pop_eth
+    - name: openstack-scripts
+      repo: https://github.com/jcaamano/openstack-scripts.git
+
+  - name: compute
+    hypervisor:
+      name: localhost
+      username: jcaamano
+    memory: 8192
+    vcpus: 1
+    box: "opensuse/openSUSE-42.3-x86_64"
+    local_conf_file: ../common/local.confs/local.conf.sfc.compute
+    devstack_version: stable/rocky
+    projects:
+    - name: openvswitch
+      repo: https://github.com/jcaamano/ovs.git
+      version: fix_push_pop_eth
+    - name: openstack-scripts
+      repo: https://github.com/jcaamano/openstack-scripts.git

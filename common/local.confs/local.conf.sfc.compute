@@ -1,6 +1,6 @@
 [[local|localrc]]
 
-enable_plugin networking-sfc https://github.com/jcaamano/networking-sfc.git stable/queens_fixes
+enable_plugin networking-sfc https://github.com/openstack/networking-sfc stable/rocky
 
 NOVA_READY_TIMEOUT=600
 
